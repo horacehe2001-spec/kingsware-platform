@@ -46,5 +46,8 @@ desktop.ini
 ~$*.xlsx
 ~$*.pptx
 
+# --- Claude Code local config ---
+.claude/
+
 # --- Misc ---
 .vercel
