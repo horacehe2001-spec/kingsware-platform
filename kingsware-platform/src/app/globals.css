@@ -1,0 +1,842 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─────────────────────────────────────────────
+ * 智慧信贷智能体平台 · 设计令牌 (Tailwind 4)
+ * ──────────────────────────────────────────── */
+
+@theme inline {
+  /* 字体 */
+  --font-sans: var(--font-noto-sc), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-heading: var(--font-noto-sc), var(--font-inter), sans-serif;
+
+  /* 基础色（shadcn token） */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* 应用底色（页面背景，比 card 略冷一点的白蓝灰） */
+  --color-app: var(--app);
+
+  /* 业务语义色 · 评分等级 ABCD */
+  --color-grade-a: var(--grade-a);
+  --color-grade-a-bg: var(--grade-a-bg);
+  --color-grade-b: var(--grade-b);
+  --color-grade-b-bg: var(--grade-b-bg);
+  --color-grade-c: var(--grade-c);
+  --color-grade-c-bg: var(--grade-c-bg);
+  --color-grade-d: var(--grade-d);
+  --color-grade-d-bg: var(--grade-d-bg);
+
+  /* 业务语义色 · 风险等级 */
+  --color-risk-low: var(--risk-low);
+  --color-risk-medium: var(--risk-medium);
+  --color-risk-high: var(--risk-high);
+  --color-risk-critical: var(--risk-critical);
+
+  /* AI 高光色（专用于 Agent 流水线、SDAFI 回放、生成式区块） */
+  --color-ai-from: var(--ai-from);
+  --color-ai-to: var(--ai-to);
+  --color-ai-glow: var(--ai-glow);
+  --color-ai-bg: var(--ai-bg);
+
+  /* 图表色（Recharts 调用） */
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* 侧栏 */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* 圆角 */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  --radius: 0.625rem;
+
+  /* ── 浅色（默认）· 金融级 Trust Blue ── */
+  --background: oklch(1 0 0);                          /* #FFFFFF */
+  --foreground: oklch(0.2 0.04 257);                   /* slate-900 #0F172A */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0.04 257);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0.04 257);
+
+  /* 主色 = Trust Blue (#2563EB) */
+  --primary: oklch(0.55 0.21 263);
+  --primary-foreground: oklch(0.985 0 0);
+
+  /* 二级色 = Slate-800 */
+  --secondary: oklch(0.96 0.01 257);
+  --secondary-foreground: oklch(0.27 0.04 257);
+
+  --muted: oklch(0.97 0.01 257);
+  --muted-foreground: oklch(0.5 0.04 257);             /* slate-500 */
+
+  /* accent = 主色淡背景（hover/选中） */
+  --accent: oklch(0.97 0.02 257);
+  --accent-foreground: oklch(0.4 0.16 263);
+
+  --destructive: oklch(0.6 0.22 25);                   /* rose */
+  --border: oklch(0.92 0.01 257);                      /* slate-200 */
+  --input: oklch(0.92 0.01 257);
+  --ring: oklch(0.55 0.21 263);
+
+  /* 应用底色（slate-50 with subtle blue tint） */
+  --app: oklch(0.985 0.005 257);
+
+  /* 评分等级（语义色） */
+  --grade-a: oklch(0.62 0.16 158);                     /* emerald-500 */
+  --grade-a-bg: oklch(0.96 0.04 158);
+  --grade-b: oklch(0.6 0.18 245);                      /* blue-500 */
+  --grade-b-bg: oklch(0.96 0.04 245);
+  --grade-c: oklch(0.75 0.15 76);                      /* amber-500 */
+  --grade-c-bg: oklch(0.97 0.04 90);
+  --grade-d: oklch(0.6 0.22 22);                       /* rose-500 */
+  --grade-d-bg: oklch(0.96 0.04 22);
+
+  /* 风险等级 */
+  --risk-low: oklch(0.62 0.16 158);                    /* emerald */
+  --risk-medium: oklch(0.75 0.15 76);                  /* amber */
+  --risk-high: oklch(0.65 0.21 35);                    /* orange-red */
+  --risk-critical: oklch(0.55 0.24 22);                /* deep red */
+
+  /* AI 渐变（indigo → violet） */
+  --ai-from: oklch(0.55 0.21 280);                     /* indigo-500 */
+  --ai-to: oklch(0.55 0.24 305);                       /* violet-500 */
+  --ai-glow: oklch(0.55 0.21 280 / 0.15);
+  --ai-bg: oklch(0.97 0.03 280);
+
+  /* 图表（5 色调色板：Trust Blue / Teal / Amber / Violet / Rose） */
+  --chart-1: oklch(0.55 0.21 263);                     /* blue */
+  --chart-2: oklch(0.65 0.13 195);                     /* teal */
+  --chart-3: oklch(0.75 0.15 76);                      /* amber */
+  --chart-4: oklch(0.55 0.24 305);                     /* violet */
+  --chart-5: oklch(0.65 0.21 22);                      /* rose */
+
+  /* 侧栏（白底，专业深色文字） */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.27 0.04 257);
+  --sidebar-primary: oklch(0.55 0.21 263);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0.02 257);
+  --sidebar-accent-foreground: oklch(0.4 0.16 263);
+  --sidebar-border: oklch(0.93 0.01 257);
+  --sidebar-ring: oklch(0.55 0.21 263);
+}
+
+.dark {
+  /* ── 深色（用于 AI 工作台、SDAFI 回放页） ── */
+  --background: oklch(0.16 0.02 257);                  /* deep slate */
+  --foreground: oklch(0.96 0.01 257);
+  --card: oklch(0.2 0.02 257);
+  --card-foreground: oklch(0.96 0.01 257);
+  --popover: oklch(0.2 0.02 257);
+  --popover-foreground: oklch(0.96 0.01 257);
+
+  --primary: oklch(0.7 0.18 263);
+  --primary-foreground: oklch(0.16 0.02 257);
+
+  --secondary: oklch(0.25 0.02 257);
+  --secondary-foreground: oklch(0.96 0.01 257);
+
+  --muted: oklch(0.25 0.02 257);
+  --muted-foreground: oklch(0.7 0.02 257);
+
+  --accent: oklch(0.3 0.04 263);
+  --accent-foreground: oklch(0.96 0.01 257);
+
+  --destructive: oklch(0.7 0.2 25);
+  --border: oklch(1 0 0 / 0.1);
+  --input: oklch(1 0 0 / 0.1);
+  --ring: oklch(0.7 0.18 263);
+
+  --app: oklch(0.13 0.02 257);
+
+  /* 评分等级（深色更亮） */
+  --grade-a: oklch(0.72 0.18 158);
+  --grade-a-bg: oklch(0.25 0.06 158);
+  --grade-b: oklch(0.72 0.18 245);
+  --grade-b-bg: oklch(0.25 0.06 245);
+  --grade-c: oklch(0.78 0.16 76);
+  --grade-c-bg: oklch(0.25 0.05 76);
+  --grade-d: oklch(0.7 0.22 22);
+  --grade-d-bg: oklch(0.25 0.05 22);
+
+  /* 风险 */
+  --risk-low: oklch(0.72 0.18 158);
+  --risk-medium: oklch(0.78 0.16 76);
+  --risk-high: oklch(0.7 0.22 35);
+  --risk-critical: oklch(0.65 0.24 22);
+
+  /* AI（暗色更鲜艳） */
+  --ai-from: oklch(0.65 0.22 280);
+  --ai-to: oklch(0.65 0.25 305);
+  --ai-glow: oklch(0.65 0.22 280 / 0.25);
+  --ai-bg: oklch(0.22 0.06 280);
+
+  /* 图表 */
+  --chart-1: oklch(0.7 0.18 263);
+  --chart-2: oklch(0.7 0.13 195);
+  --chart-3: oklch(0.78 0.16 76);
+  --chart-4: oklch(0.65 0.22 305);
+  --chart-5: oklch(0.7 0.21 22);
+
+  --sidebar: oklch(0.18 0.02 257);
+  --sidebar-foreground: oklch(0.96 0.01 257);
+  --sidebar-primary: oklch(0.7 0.18 263);
+  --sidebar-primary-foreground: oklch(0.16 0.02 257);
+  --sidebar-accent: oklch(0.27 0.04 263);
+  --sidebar-accent-foreground: oklch(0.96 0.01 257);
+  --sidebar-border: oklch(1 0 0 / 0.1);
+  --sidebar-ring: oklch(0.7 0.18 263);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-app text-foreground;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+  button:not(:disabled),
+  [role='button']:not(:disabled) {
+    cursor: pointer;
+  }
+  /* 数字使用等宽对齐 */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+  /* 中文字体微调 */
+  .font-display {
+    font-family: var(--font-noto-sc), var(--font-inter), sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* ─────────────────────────────────────────────
+ * AI 原生组件专用样式
+ * ──────────────────────────────────────────── */
+@layer components {
+  /* AI 渐变背景 */
+  .ai-gradient {
+    background: linear-gradient(135deg, var(--ai-from) 0%, var(--ai-to) 100%);
+  }
+  .ai-gradient-text {
+    background: linear-gradient(135deg, var(--ai-from) 0%, var(--ai-to) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .ai-gradient-border {
+    position: relative;
+    background:
+      linear-gradient(var(--card), var(--card)) padding-box,
+      linear-gradient(135deg, var(--ai-from), var(--ai-to)) border-box;
+    border: 1px solid transparent;
+  }
+  /* AI 区块外发光（subtle） */
+  .ai-glow {
+    box-shadow: 0 0 0 1px var(--ai-glow), 0 4px 16px var(--ai-glow);
+  }
+  /* 数据流动画（Agent 流水线） */
+  .data-flow-line {
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--ai-from) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: data-flow 2s linear infinite;
+  }
+  @keyframes data-flow {
+    0% {
+      background-position: 100% 0;
+    }
+    100% {
+      background-position: -100% 0;
+    }
+  }
+
+  /* Agent 心跳脉冲（运行中状态） */
+  .agent-pulse {
+    animation: agent-pulse 1.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes agent-pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.55;
+    }
+  }
+}
+
+/* 减少动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   打印版报告样式 (print route group)
+   ═══════════════════════════════════════════ */
+
+.print-wrapper {
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 20mm 18mm;
+  background: #fff;
+  color: #1a1a1a;
+  font-family: var(--font-noto-sc), 'SimSun', 'STSong', serif;
+  font-size: 14px;
+  line-height: 1.95;
+}
+
+/* 屏幕预览时给报告壳一个 A4 视感（仅屏幕，不影响打印） */
+@media screen {
+  .print-wrapper {
+    margin: 24px auto;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 6px 24px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.print-cover {
+  text-align: center;
+  padding-top: 80mm;
+}
+.print-cover-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2563eb;
+  letter-spacing: 4px;
+}
+.print-cover-number {
+  margin-top: 12px;
+  font-size: 16px;
+  color: #64748b;
+}
+.print-cover-spacer {
+  height: 60mm;
+}
+.print-cover-info {
+  margin: 0 auto;
+  font-size: 14px;
+  line-height: 2;
+}
+.print-cover-info td:first-child {
+  text-align: right;
+  padding-right: 12px;
+  color: #64748b;
+  white-space: nowrap;
+}
+.print-cover-info td:last-child {
+  text-align: left;
+  font-weight: 500;
+}
+.print-cover-footer {
+  margin-top: 20mm;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.print-page-break {
+  page-break-after: always;
+  break-after: page;
+}
+
+/* 屏幕预览：在 H1 之前画一条"分页提示线"，让用户在屏幕上也能看到分页位置 */
+@media screen {
+  .print-h1::before {
+    content: '— 分页 —';
+    display: block;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 400;
+    border-top: 1px dashed #cbd5e1;
+    padding-top: 12px;
+    margin: 24px -10mm 16px;
+  }
+  .print-h1:first-of-type::before {
+    display: none;
+  }
+  .print-page-break {
+    border-top: 1px dashed #cbd5e1;
+    margin: 32px 0 24px;
+    height: 0;
+    text-align: center;
+  }
+  .print-page-break::before {
+    content: '— 分页 —';
+    display: inline-block;
+    background: #fff;
+    padding: 0 12px;
+    color: #94a3b8;
+    font-size: 11px;
+    transform: translateY(-50%);
+  }
+}
+
+.print-section {
+  margin-bottom: 20px;
+}
+
+.print-h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 28px 0 18px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #2563eb;
+  color: #1e293b;
+  /* 章节始终另起一页 */
+  page-break-before: always;
+  break-before: page;
+}
+.print-h1:first-of-type {
+  /* 第一章不强制空一页 */
+  page-break-before: auto;
+  break-before: auto;
+}
+.print-h2 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 24px 0 12px;
+  color: #2563eb;
+  /* 子节避免被夹在页底 */
+  page-break-after: avoid;
+  break-after: avoid;
+}
+.print-h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 16px 0 8px;
+  color: #334155;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+.print-body {
+  margin: 4px 0;
+  text-align: justify;
+}
+.print-meta {
+  font-size: 11px;
+  color: #666;
+}
+
+/* KV 表 */
+.print-kv {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 10px 0;
+  font-size: 13px;
+}
+.print-kv td {
+  padding: 7px 12px;
+  border: 1px solid #e2e8f0;
+}
+.print-kv-key {
+  font-weight: 500;
+  color: #64748b;
+  white-space: nowrap;
+  background: #f8fafc;
+  width: 180px;
+}
+.print-kv-val {
+  font-weight: 600;
+}
+
+/* 数据表 */
+.print-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+  font-size: 13px;
+}
+.print-table th {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 600;
+}
+.print-table td {
+  border: 1px solid #e2e8f0;
+  padding: 7px 10px;
+}
+
+/* 章节小标题 + 主责 Agent 标签 */
+.print-h2-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.print-agent-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 3px;
+  padding: 1px 6px;
+  letter-spacing: 0.3px;
+}
+
+/* 表格标题 */
+.print-table-caption {
+  font-size: 12px;
+  color: #475569;
+  margin: 8px 0 4px;
+  font-weight: 500;
+}
+
+/* 🤖 Agent 生成区 */
+.print-agent-block {
+  margin: 8px 0;
+  border: 1px dashed #2563eb;
+  border-left: 3px solid #2563eb;
+  background: #f8faff;
+  padding: 10px 12px;
+  border-radius: 3px;
+}
+.print-agent-block-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px dotted #c7d2fe;
+}
+.print-agent-block-icon {
+  font-size: 14px;
+}
+.print-agent-block-title {
+  font-weight: 600;
+  color: #1e40af;
+  font-size: 13px;
+}
+.print-agent-block-id {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 500;
+  color: #2563eb;
+  background: #fff;
+  border: 1px solid #bfdbfe;
+  border-radius: 3px;
+  padding: 1px 6px;
+}
+.print-agent-block-meta {
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+.print-agent-block-meta p {
+  margin: 1px 0;
+}
+.print-agent-block-body {
+  font-size: 12.5px;
+  color: #1f2937;
+  line-height: 1.7;
+  text-align: justify;
+}
+.print-agent-block-body p {
+  margin: 4px 0;
+}
+
+/* 📊 真图表（recharts SSR） */
+.print-chart-real {
+  margin: 12px 0 16px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.print-chart-real-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+.print-chart-real-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1e293b;
+}
+.print-chart-real-desc {
+  font-size: 11px;
+  color: #64748b;
+}
+.print-chart-real-body {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.print-chart-real-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 6px 12px 10px;
+  font-size: 11px;
+  color: #475569;
+}
+.print-chart-real-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.print-chart-real-legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.print-chart-real-pie-wrap {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.print-chart-real-pie-legend {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+.print-chart-real-pie-legend li {
+  display: grid;
+  grid-template-columns: 14px 1fr auto auto;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 11px;
+  align-items: center;
+  border-bottom: 1px dotted #e2e8f0;
+}
+.print-chart-real-pie-name {
+  color: #1e293b;
+}
+.print-chart-real-pie-pct {
+  font-weight: 600;
+  color: #2563eb;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+}
+.print-chart-real-pie-val {
+  color: #64748b;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.print-chart-real-risk-list {
+  list-style: none;
+  padding: 4px 12px 10px;
+  margin: 0;
+  font-size: 11px;
+  color: #475569;
+}
+.print-chart-real-risk-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+/* 股权穿透树 */
+.print-equity-tree {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+}
+.print-equity-node {
+  border: 1.5px solid #2563eb;
+  background: #eff6ff;
+  border-radius: 4px;
+  padding: 6px 12px;
+  text-align: center;
+  min-width: 130px;
+  max-width: 200px;
+}
+.print-equity-root {
+  background: #2563eb;
+  color: #fff;
+  border-color: #1d4ed8;
+}
+.print-equity-root .print-equity-node-name { color: #fff; }
+.print-equity-root .print-equity-node-tag { color: #bfdbfe; }
+.print-equity-node-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e293b;
+}
+.print-equity-node-tag {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 2px;
+}
+.print-equity-line {
+  width: 1.5px;
+  height: 28px;
+  background: #cbd5e1;
+}
+.print-equity-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.print-equity-shareholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.print-equity-edge {
+  width: 1.5px;
+  height: 24px;
+  background: #cbd5e1;
+  position: relative;
+  margin-bottom: 0;
+}
+.print-equity-edge-ratio {
+  position: absolute;
+  left: 8px;
+  top: 4px;
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 600;
+  color: #2563eb;
+  background: #fff;
+  padding: 0 4px;
+}
+.print-equity-note {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #475569;
+  text-align: center;
+  font-style: italic;
+}
+
+/* 📊 旧文字图表占位（保留作为 fallback） */
+.print-chart-ph {
+  margin: 8px 0;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  padding: 10px 12px;
+  border-radius: 3px;
+}
+.print-chart-ph-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+.print-chart-ph-title {
+  color: #475569;
+  font-size: 12px;
+}
+.print-chart-ph-desc {
+  font-size: 11.5px;
+  color: #64748b;
+  margin: 2px 0 0;
+}
+
+/* 目录 */
+.print-toc {
+  margin: 16px 0;
+}
+.print-toc-h {
+  font-weight: 600;
+  margin: 8px 0 4px;
+}
+.print-toc-i {
+  padding-left: 20px;
+  margin: 2px 0;
+}
+
+/* 打印媒体查询 */
+@media print {
+  body {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .print-wrapper {
+    max-width: none;
+    margin: 0;
+    padding: 15mm 12mm;
+  }
+  .print-cover {
+    padding-top: 60mm;
+  }
+  .print-cover-spacer {
+    height: 40mm;
+  }
+  .print-page-break {
+    page-break-after: always;
+    break-after: page;
+  }
+  .print-table {
+    page-break-inside: auto;
+  }
+  .print-table tr {
+    page-break-inside: avoid;
+  }
+  .print-h1, .print-h2, .print-h3 {
+    page-break-after: avoid;
+  }
+  .print-agent-block, .print-chart-ph, .print-chart-real {
+    page-break-inside: avoid;
+  }
+}

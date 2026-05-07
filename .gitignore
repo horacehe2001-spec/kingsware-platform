@@ -1,0 +1,50 @@
+# --- Dependencies ---
+node_modules/
+.pnpm-store/
+
+# --- Next.js / build artifacts ---
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# --- Env / secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Logs ---
+*.log
+dev-output.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Coverage / cache ---
+coverage/
+.cache/
+.eslintcache
+.turbo/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Office temp ---
+~$*.docx
+~$*.xlsx
+~$*.pptx
+
+# --- Misc ---
+.vercel
