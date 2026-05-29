@@ -77,7 +77,16 @@ const NAV_GROUPS: { label: string; items: NavItem[] }[] = [
   {
     label: 'AI 与合规',
     items: [
-      { title: 'Agent 工作台', href: '/agents', icon: Sparkles, ai: true },
+      {
+        title: 'Agent 工作台',
+        href: '/agents',
+        icon: Sparkles,
+        ai: true,
+        children: [
+          { title: 'Agent 全景', href: '/agents' },
+          { title: '行业分析 Agent', href: '/agents/industry' },
+        ],
+      },
       { title: '合规审计', href: '/audit', icon: ShieldCheck },
       { title: '数据看板', href: '/insights', icon: CreditCard },
     ],

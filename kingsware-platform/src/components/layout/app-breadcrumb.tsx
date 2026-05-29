@@ -15,6 +15,7 @@ const ROUTE_LABELS: Record<string, string> = {
   reports: '报告',
   monitor: '贷中贷后风控',
   agents: 'Agent 工作台',
+  industry: '行业分析 Agent',
   audit: '合规审计',
   insights: '数据看板',
   settings: '系统管理',
