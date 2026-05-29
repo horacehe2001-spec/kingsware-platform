@@ -4,6 +4,13 @@
  * 每个 Agent 生成区按 法人小微Agent对应矩阵_最终版.docx 标注主责 Agent。
  */
 
+import {
+  gradeToLabel,
+  labelToReference,
+  labelToStars,
+  overallVerdict,
+  scoreToLabel,
+} from '@/data/analysis-labels';
 import { getLeProfile } from '@/data/customer-profiles';
 import type { LegalEntityCustomer, DueDiligenceReport } from '@/data/types';
 
@@ -39,34 +46,34 @@ export function LeChapters({
 }) {
   const v = customer.fiveDimensionScores!;
   const profile = getLeProfile(customer);
-  const totalScore = report.totalScore ?? 78;
-  const grade = report.creditGrade ?? 'B';
+  const overall = gradeToLabel(report.creditGrade ?? 'B');
+  const verdict = overallVerdict(overall);
   const vetoHit = report.oneVoteVeto.filter((x) => x.triggered);
   const vetoOk = report.oneVoteVeto.filter((x) => !x.triggered);
 
   return (
     <>
       {/* ═══ 第一部分 ═══ */}
-      <SectionH1>第一部分　报告摘要与授信意见</SectionH1>
+      <SectionH1>第一部分　报告摘要与授信参考</SectionH1>
       <p className="print-body">
-        本部分为本报告的核心结论摘要，授信审批人员可通过本部分快速掌握企业整体信用画像、风险等级、核心风险点及授信建议。详细数据支撑见后续各部分。
+        本部分为本报告的核心结论摘要，授信审批人员可通过本部分快速掌握企业整体经营画像、风险状况、核心风险点及授信参考。详细数据支撑见后续各部分。
       </p>
 
-      <SectionH2 number="1.1" title="五维综合评分摘要" agentId="LE-A06" />
+      <SectionH2 number="1.1" title="企业综合分析摘要" agentId="LE-A06" />
       <PrintTable
-        header={['评分维度', '权重', '得分(0-100)', '加权分', '评级', '本维度备注']}
+        header={['分析维度', '维度表现', '关键发现']}
         rows={[
-          ['经营稳定性', '30%', String(v.operationStability), (v.operationStability * 0.3).toFixed(1), gradeOf(v.operationStability), '近三年营收复合增长 16%，管理层稳定'],
-          ['财务健康度', '25%', String(v.financialHealth), (v.financialHealth * 0.25).toFixed(1), gradeOf(v.financialHealth), '资产负债率 48.6%，应收账款周转偏长'],
-          ['履约能力', '25%', String(v.performance), (v.performance * 0.25).toFixed(1), gradeOf(v.performance), '近 36 月融资 6 笔均已结清'],
-          ['合规性', '15%', String(v.compliance), (v.compliance * 0.15).toFixed(1), gradeOf(v.compliance), '无重大行政处罚、无失信记录'],
-          ['成长性', '5%', String(v.growth), (v.growth * 0.05).toFixed(1), gradeOf(v.growth), '行业景气度上行，研发投入 7.2%'],
-          ['综合得分', '100%', String(totalScore), String(totalScore), grade, '—'],
+          ['经营稳定性', scoreToLabel(v.operationStability), '近三年营收复合增长 16%，管理层稳定'],
+          ['财务健康度', scoreToLabel(v.financialHealth), '资产负债率 48.6%，应收账款周转偏长'],
+          ['履约能力', scoreToLabel(v.performance), '近 36 月融资 6 笔均已结清'],
+          ['合规性', scoreToLabel(v.compliance), '无重大行政处罚、无失信记录'],
+          ['成长性', scoreToLabel(v.growth), '行业景气度上行，研发投入 7.2%'],
+          ['综合评价', overall, '—'],
         ]}
       />
       <PrintRadar
-        title="五维评分雷达图"
-        description={`综合 ${totalScore}（${grade} 级）`}
+        title="企业综合分析雷达图"
+        description={`综合评价：${overall}`}
         data={[
           { dimension: '经营稳定性', score: v.operationStability, weight: 30 },
           { dimension: '财务健康度', score: v.financialHealth, weight: 25 },
@@ -76,27 +83,26 @@ export function LeChapters({
         ]}
       />
 
-      <SectionH2 number="1.2" title="信用等级与授信建议" />
-      <SectionH3 number="1.2.1" title="信用等级标准" />
+      <SectionH2 number="1.2" title="综合分析档位与授信参考" />
+      <SectionH3 number="1.2.1" title="综合分析档位说明" />
       <PrintTable
-        header={['等级', '分数区间', '授信建议', '标识']}
-        rows={[
-          ['A', '85-100', '建议批准（优质客户，可适当放宽）', '★★★'],
-          ['B', '70-84', '建议批准（标准条件）', '★★'],
-          ['C', '55-69', '有条件批准（须强化担保或限额）', '★'],
-          ['D', '<55', '建议否决', '×'],
-        ]}
+        header={['维度表现', '授信参考', '标识']}
+        rows={(['强', '较好', '一般', '偏弱'] as const).map((label) => [
+          label,
+          labelToReference(label),
+          labelToStars(label),
+        ])}
       />
 
-      <SectionH3 number="1.2.2" title="本次授信建议" agentId="LE-A10" />
+      <SectionH3 number="1.2.2" title="本次授信参考" agentId="LE-A10" />
       {report.recommendation && (
         <PrintKv
           rows={[
-            ['综合风险评级', `${grade}（${gradeText(grade)}）`],
-            ['授信决策', report.recommendation.decision],
-            ['建议金额', `${report.recommendation.amount.toLocaleString('zh-CN')} 万元`],
-            ['建议期限', `${report.recommendation.term} 个月`],
-            ['建议利率', report.recommendation.rate],
+            ['综合风险评价', verdict],
+            ['授信参考', '还款来源测算可覆盖（最终以银行审批为准）'],
+            ['测算参考额度', `${report.recommendation.amount.toLocaleString('zh-CN')} 万元`],
+            ['参考期限', `${report.recommendation.term} 个月`],
+            ['参考利率', report.recommendation.rate],
             ['担保方式', report.recommendation.guarantee],
             ['还款方式', '按月付息，到期还本'],
             ['关键风控条件', report.recommendation.conditions.join('；')],
@@ -653,77 +659,77 @@ export function LeChapters({
       <PageBreak />
 
       {/* ═══ 第七部分 LE-A06/A07 ═══ */}
-      <SectionH1>第七部分　五维信用评分明细</SectionH1>
+      <SectionH1>第七部分　企业综合分析明细</SectionH1>
       <p className="print-body">
-        本部分展示五维评分模型每个维度、每个子指标的接口调用、原始返回、评分规则和最终得分。这是评分的可解释性证据。<strong>LE-A06 主责评分，LE-A07 主责交叉验证</strong>。
+        本部分展示企业综合分析每个维度、每个子指标的接口调用、原始返回与分析规则，是各维度定性判断的可解释性证据。<strong>LE-A06 主责分析，LE-A07 主责交叉验证</strong>。
       </p>
 
       <SectionH2 number="7.1" title="维度一：经营稳定性（30%）" agentId="LE-A06" />
       <PrintTable
-        header={['子指标', '权重', '数据接口', '评分规则', '原始数据', '得分']}
+        header={['子指标', '数据接口', '分析规则', '原始数据']}
         rows={[
-          ['企业存续年限', '8%', '工商基本信息', '≥5 年=100 / 3-5=70 / &lt;3=40', '7.5 年', '100'],
-          ['注册资本实缴率', '6%', '企业股东及出资', '100% 实缴=100', '100%', '100'],
-          ['营收增长率', '8%', '核心财务指标', '&gt;15%=100 / 5-15=80 / &lt;5=50', '15.3%', '100'],
-          ['用电稳定性', '4%', '企业用电数据标签', '指数 ≥ 70', '76', '85'],
-          ['核心团队稳定性', '4%', '企业主要人员', '近 3 年 0 离职=100', '0 离职', '100'],
-          ['维度合计', '30%', '—', '—', '—', '82'],
+          ['企业存续年限', '工商基本信息', '≥5 年=强 / 3-5=较好 / <3=偏弱', '7.5 年'],
+          ['注册资本实缴率', '企业股东及出资', '100% 实缴=强', '100%'],
+          ['营收增长率', '核心财务指标', '>15%=强 / 5-15=较好 / <5=一般', '15.3%'],
+          ['用电稳定性', '企业用电数据标签', '指数 ≥ 70', '76'],
+          ['核心团队稳定性', '企业主要人员', '近 3 年 0 离职=强', '0 离职'],
+          ['维度合计', '—', '—', '—'],
         ]}
       />
 
       <SectionH2 number="7.2" title="维度二：财务健康度（25%）" agentId="LE-A06" />
       <PrintTable
-        header={['子指标', '权重', '数据接口', '评分规则', '原始数据', '得分']}
+        header={['子指标', '数据接口', '分析规则', '原始数据']}
         rows={[
-          ['资产负债率', '6%', '资产负债表', '&lt; 50%=100', '48.6%', '95'],
-          ['流动比率', '5%', '资产负债表', '≥ 1.5=100', '1.73', '100'],
-          ['毛利率', '5%', '利润表', '高于行业=100', '22.4%', '100'],
-          ['应收账款周转', '5%', '核心财务指标', '行业内', '142 天', '40'],
-          ['现金流健康度', '4%', '现金流量表', '净现比 &gt; 1=100', '1.23', '95'],
-          ['维度合计', '25%', '—', '—', '—', '75'],
+          ['资产负债率', '资产负债表', '< 50%=强', '48.6%'],
+          ['流动比率', '资产负债表', '≥ 1.5=强', '1.73'],
+          ['毛利率', '利润表', '高于行业=强', '22.4%'],
+          ['应收账款周转', '核心财务指标', '行业内', '142 天'],
+          ['现金流健康度', '现金流量表', '净现比 > 1=强', '1.23'],
+          ['维度合计', '—', '—', '—'],
         ]}
       />
 
       <SectionH2 number="7.3" title="维度三：履约能力（25%）" agentId="LE-A06" />
       <PrintTable
-        header={['子指标', '权重', '数据接口', '评分规则', '原始数据', '得分']}
+        header={['子指标', '数据接口', '分析规则', '原始数据']}
         rows={[
-          ['历史融资履约', '7%', '融资综合查询', '0 逾期=100', '0 逾期', '100'],
-          ['招投标履约', '6%', '招投标信息', '履约率 ≥ 95%=100', '100%', '100'],
-          ['纳税信用', '5%', '纳税信用', 'A=100 / B=80 / C=50', 'B', '80'],
-          ['多头借贷', '4%', '多机构查询', '正常=100', '正常', '90'],
-          ['抵押资产可控性', '3%', '动产抵押', '抵押率 &lt; 70%=100', '60%', '90'],
-          ['维度合计', '25%', '—', '—', '—', '80'],
+          ['历史融资履约', '融资综合查询', '0 逾期=强', '0 逾期'],
+          ['招投标履约', '招投标信息', '履约率 ≥ 95%=强', '100%'],
+          ['纳税信用', '纳税信用', 'A=强 / B=较好 / C=一般', '较好'],
+          ['多头借贷', '多机构查询', '正常=强', '正常'],
+          ['抵押资产可控性', '动产抵押', '抵押率 < 70%=强', '60%'],
+          ['维度合计', '—', '—', '—'],
         ]}
       />
 
       <SectionH2 number="7.4" title="维度四：合规性（15%）" agentId="LE-A06" />
       <PrintTable
-        header={['子指标', '权重', '数据接口', '评分规则', '原始数据', '得分']}
+        header={['子指标', '数据接口', '分析规则', '原始数据']}
         rows={[
-          ['失信被执行', '5%', '失信被执行', '0=100', '0', '100'],
-          ['行政处罚', '4%', '企业行政处罚', '近 2 年 0=100', '1 起轻微', '85'],
-          ['法人个人风险', '3%', '个人综合涉诉', '0=100', '0', '100'],
-          ['司法涉诉', '3%', '企业涉诉', '0=100 / &lt;3=80', '0', '100'],
-          ['维度合计', '15%', '—', '—', '—', '88'],
+          ['失信被执行', '失信被执行', '0=强', '0'],
+          ['行政处罚', '企业行政处罚', '近 2 年 0=强', '1 起轻微'],
+          ['法人个人风险', '个人综合涉诉', '0=强', '0'],
+          ['司法涉诉', '企业涉诉', '0=强 / <3=较好', '0'],
+          ['维度合计', '—', '—', '—'],
         ]}
       />
 
       <SectionH2 number="7.5" title="维度五：成长性（5%）" agentId="LE-A06" />
       <PrintTable
-        header={['子指标', '权重', '数据接口', '评分规则', '原始数据', '得分']}
+        header={['子指标', '数据接口', '分析规则', '原始数据']}
         rows={[
-          ['行业景气度', '2%', '行业 RAG', '上行=80 / 中性=60', '中性偏积极', '70'],
-          ['研发投入比', '1.5%', '利润表', '&gt; 5%=100', '7.2%', '85'],
-          ['专利数量', '1%', '企业商标 / 专利', '≥ 10=80', '21 项', '80'],
-          ['核心团队学历结构', '0.5%', '社保 + 招聘', '本科以上 50%=80', '本科 60%', '80'],
-          ['维度合计', '5%', '—', '—', '—', '65'],
+          ['行业景气度', '行业 RAG', '上行=较好 / 中性=一般', '中性偏积极'],
+          ['研发投入比', '利润表', '> 5%=强', '7.2%'],
+          ['专利数量', '企业商标 / 专利', '≥ 10=较好', '21 项'],
+          ['核心团队学历结构', '社保 + 招聘', '本科以上 50%=较好', '本科 60%'],
+          ['维度合计', '—', '—', '—'],
         ]}
       />
 
       <SectionH2 number="7.6" title="五对交叉验证结果" agentId="LE-A07" />
       <p className="print-body">
-        交叉验证是发现单一维度评分难以察觉的潜在风险的核心手段，五对验证规则覆盖了财务真实性、规模真实性、贸易真实性、资金链紧张等关键风险点。
+        交叉验证是发现单一维度分析难以察觉的潜在风险的核心手段，五对验证规则覆盖了财务真实性、规模真实性、贸易真实性、资金链紧张等关键风险点。
       </p>
       {report.crossValidations && (
         <PrintTable
@@ -915,12 +921,12 @@ export function LeChapters({
       {/* ═══ 调查结论与签字 ═══ */}
       <SectionH1>调查结论与签字</SectionH1>
       <p className="print-body">
-        综合上述企业经营、财务、合规、行业及关联方多维度分析，以及五维信用评分（综合得分 {totalScore} 分，信用等级 {grade} 级）、五对交叉验证结果（关注 2 项 / 异常 0 项）、一票否决项检查（{vetoHit.length === 0 ? '全部通过' : `触发 ${vetoHit.length} 项`}），本次调查的最终结论为：
+        综合上述企业经营、财务、合规、行业及关联方多维度分析，以及企业综合分析（综合表现{verdict}）、五对交叉验证结果（关注 2 项 / 异常 0 项）、一票否决项检查（{vetoHit.length === 0 ? '全部通过' : `触发 ${vetoHit.length} 项`}），本次调查的最终结论为：
       </p>
       <p className="print-body">
-        建议批准本次授信申请。{report.recommendation && (
+        经测算还款来源可覆盖、核心风险整体可控，是否授信由银行审批人员独立判定。{report.recommendation && (
           <>
-            授信金额 {report.recommendation.amount} 万元，期限 {report.recommendation.term} 个月，利率 {report.recommendation.rate}，担保方式 {report.recommendation.guarantee}。
+            供审批参考：额度 {report.recommendation.amount} 万元，期限 {report.recommendation.term} 个月，利率 {report.recommendation.rate}，担保方式 {report.recommendation.guarantee}。
           </>
         )}核心风险已通过结构性条款（季报报送、关联交易披露、TOP5 客户回款月报）覆盖。建议放款前完成不动产抵押登记，存续期内执行月度关联交易披露 + 季度财务报表复核。
       </p>
@@ -998,17 +1004,15 @@ export function LeChapters({
         ]}
       />
 
-      <SectionH2 number="附录 B" title="评分算法详解" />
-      <SectionH3 number="B.1" title="评分计算公式" />
+      <SectionH2 number="附录 B" title="分析方法详解" />
+      <SectionH3 number="B.1" title="分析方法说明" />
       <p className="print-body">
-        综合得分 = Σ(维度得分 × 维度权重)
-        <br />维度得分 = Σ(子指标得分 × 子指标权重)
-        <br />子指标得分 = 评分规则(原始数据) → [0, 100]
+        本分析不进行数值打分或加权汇总；各维度依据多源数据形成 强 / 较好 / 一般 / 偏弱 的定性判断，综合评价由各维度表现与风险点归纳得出。
       </p>
 
       <SectionH3 number="B.2" title="权重设计依据" />
       <p className="print-body">
-        五维权重 30/25/25/15/5 的设计依据：① 法人小微"企业独立于人"，企业经营是核心，因此经营稳定性权重最高；② 财务和履约直接对应偿债能力，权重并列第二；③ 合规和成长性权重适中，反映长期可持续性。权重经 50,000+ 历史样本回测验证。
+        各维度权重 30/25/25/15/5 的设计依据：① 法人小微"企业独立于人"，企业经营是核心，因此经营稳定性权重最高；② 财务和履约直接对应偿债能力，权重并列第二；③ 合规和成长性权重适中，反映长期可持续性。权重经 50,000+ 历史样本回测验证。
       </p>
 
       <SectionH3 number="B.3" title="阈值设定原则" />
@@ -1023,7 +1027,7 @@ export function LeChapters({
 
       <SectionH2 number="附录 C" title="原始数据快照（脱敏）" />
       <p className="print-body">
-        本报告所有评分结果均可追溯到原始数据快照。完整脱敏数据快照存储于客户银行私有存储，数据时点 {report.generatedAt ?? customer.updatedAt}，可应银保监及内部审计核查。
+        本报告所有分析结论均可追溯到原始数据快照。完整脱敏数据快照存储于客户银行私有存储，数据时点 {report.generatedAt ?? customer.updatedAt}，可应银保监及内部审计核查。
       </p>
       <PrintTable
         header={['数据类别', '记录数', '数据时点', '存储位置']}
@@ -1081,10 +1085,10 @@ export function LeChapters({
       <PrintTable
         header={['项目', '内容']}
         rows={[
-          ['模型名称', '金智维法人小微企业五维信用评分模型'],
+          ['模型名称', '金智维法人小微企业企业综合分析模型'],
           ['模型版本', 'v2.6.1'],
           ['模型上线时间', '2026-01-15'],
-          ['本次评分时间', report.generatedAt ?? customer.updatedAt],
+          ['本次分析时间', report.generatedAt ?? customer.updatedAt],
           ['训练样本数', '50,000+'],
           ['回测准确率', 'KS 0.42 / AUC 0.81'],
           ['维度数', '5 维 / 24 个子指标'],
@@ -1102,7 +1106,7 @@ export function LeChapters({
           ['Agent 数据池', 'SE-01 在 Sense 阶段冻结的不可变快照，所有下游 Agent 共享'],
           ['一票否决', '监管或银行内部规定下任一命中即直接拒绝的核查项'],
           ['五对交叉验证', '纳税×用电、发票×营收、社保×年报、反欺诈×发票、多头×融资'],
-          ['五维评分', '经营稳定性 30 / 财务健康 25 / 履约能力 25 / 合规 15 / 成长 5'],
+          ['企业综合分析', '经营稳定性 30 / 财务健康 25 / 履约能力 25 / 合规 15 / 成长 5'],
           ['偿债保障倍数', '年度经营性现金流 / 年度本息合计'],
           ['净现比', '经营性现金流 / 净利润'],
           ['CR5', '前五大客户（或供应商）合计占比'],
@@ -1120,17 +1124,6 @@ export function LeChapters({
       </p>
     </>
   );
-}
-
-function gradeOf(score: number): string {
-  if (score >= 85) return 'A';
-  if (score >= 70) return 'B';
-  if (score >= 55) return 'C';
-  return 'D';
-}
-
-function gradeText(g: string): string {
-  return g === 'A' ? '优' : g === 'B' ? '良' : g === 'C' ? '中' : '差';
 }
 
 /** 把 "218.4 万度" / "32 万元" / "约 28 万" 这样的中文金额提取数字部分 */

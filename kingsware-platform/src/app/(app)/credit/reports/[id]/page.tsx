@@ -10,6 +10,7 @@ import { ScoreRadar } from '@/components/report/score-radar';
 import { SectionList } from '@/components/report/section-list';
 import { VetoCheck } from '@/components/report/veto-check';
 import { TabsContent } from '@/components/ui/tabs';
+import { gradeToLabel } from '@/data/analysis-labels';
 import { ApiError, fetchReportBundle } from '@/lib/api';
 
 interface ReportPageProps {
@@ -70,13 +71,15 @@ export default async function ReportPage({ params, searchParams }: ReportPagePro
           {/* 顶部：评分雷达 + 决策建议两栏 */}
           <div className="grid gap-4 lg:grid-cols-2">
             <ScoreRadar
-              title={isLE ? '五维评分模型' : '四维评分模型'}
-              subtitle={isLE ? '法人小微 · 30/25/25/15/5' : '个体工商户 · 35/25/25/15'}
+              title={isLE ? '企业综合分析模型' : '四维评分模型'}
+              subtitle={isLE ? '法人小微 · 维度权重 30/25/25/15/5' : '个体工商户 · 35/25/25/15'}
               totalScore={report.totalScore}
               grade={report.creditGrade}
               data={radarData}
+              mode={isLE ? 'analysis' : 'score'}
+              overallLabel={isLE && report.creditGrade ? gradeToLabel(report.creditGrade) : undefined}
             />
-            <RecommendationCard recommendation={report.recommendation} />
+            <RecommendationCard recommendation={report.recommendation} analysisMode={isLE} />
           </div>
 
           {/* Tab 切换（URL: ?tab=risks|cross|veto|sections） */}

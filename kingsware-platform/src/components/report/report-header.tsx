@@ -21,6 +21,7 @@ import { StatusBadge } from '@/components/shared/status-badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { gradeToLabel } from '@/data/analysis-labels';
 import type { Customer, DueDiligenceReport } from '@/data/types';
 import { formatAmount } from '@/lib/format';
 import { cn } from '@/lib/utils';
@@ -195,13 +196,19 @@ export function ReportHeader({ customer, report }: ReportHeaderProps) {
           highlight
         />
         <Metric
-          label="综合评分"
+          label={isLE ? '综合表现' : '综合评分'}
           value={
-            <ScoreBadge
-              grade={report.creditGrade}
-              score={report.totalScore}
-              size="lg"
-            />
+            isLE ? (
+              <span className="inline-flex items-center rounded-md border border-primary/20 bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+                {report.creditGrade ? gradeToLabel(report.creditGrade) : '—'}
+              </span>
+            ) : (
+              <ScoreBadge
+                grade={report.creditGrade}
+                score={report.totalScore}
+                size="lg"
+              />
+            )
           }
           sub={`报告号 ${report.reportNumber}`}
         />

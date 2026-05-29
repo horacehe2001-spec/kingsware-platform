@@ -40,11 +40,11 @@ const LE_PROMPTS: AgentBlockPromptDef[] = [
     agentName: '决策与结构化建议',
     sectionNumber: '1.4',
     sectionTitle: '核心风险点提示',
-    inputs: '五维评分明细 + 五对交叉验证结果 + 风险标签 + 一票否决检查',
+    inputs: '企业综合分析明细 + 五对交叉验证结果 + 风险标签 + 一票否决检查',
     outputFormat: '结构化风险点列表（3-5 项），每项 100-200 字',
     expectedLength: '约 300-500 字',
     userPromptHint:
-      '基于五维评分、五对交叉验证和风险标签综合分析，按重要性排序输出 3-5 个核心风险点。每项包含：风险标题、严重程度（极高/高/中/低）、风险描述、触发依据、潜在影响、建议关注度。',
+      '基于企业综合分析、五对交叉验证和风险标签综合分析，按重要性排序输出 3-5 个核心风险点。每项包含：风险标题、严重程度（极高/高/中/低）、风险描述、触发依据、潜在影响、建议关注度。',
   },
   {
     id: 'LE-1.5-credit-structure',
@@ -53,11 +53,11 @@ const LE_PROMPTS: AgentBlockPromptDef[] = [
     agentName: '决策与结构化建议',
     sectionNumber: '1.5',
     sectionTitle: '授信结构性建议',
-    inputs: '评分结果 + 还款来源测算 + 核心风险点 + 银行授信政策',
-    outputFormat: '结构化授信建议（各要素分项说明）',
+    inputs: '综合分析结论 + 还款来源测算 + 核心风险点 + 银行授信政策',
+    outputFormat: '结构化授信参考（各要素分项说明）',
     expectedLength: '约 300-400 字',
     userPromptHint:
-      '基于综合评分、还款能力测算、核心风险点，生成授信结构建议，分点说明：授信形式、担保结构、还款方式、限制性条款、监控触发条件。',
+      '基于综合分析、还款能力测算、核心风险点，生成授信结构建议，分点说明：授信形式、担保结构、还款方式、限制性条款、监控触发条件。',
   },
   {
     id: 'LE-2.3-history',
@@ -236,7 +236,7 @@ const LE_PROMPTS: AgentBlockPromptDef[] = [
     sectionNumber: '7.6.1',
     sectionTitle: '交叉验证综合结论',
     inputs: '五对交叉验证原始数据 + 异常阈值',
-    outputFormat: '综合结论 + 是否触发评分调降 + 是否需要人工复核',
+    outputFormat: '综合结论 + 是否触发分析结论调整 + 是否需要人工复核',
     expectedLength: '约 300-500 字',
     userPromptHint:
       '基于五对交叉验证结果，综合判断是否存在财务造假、规模虚报、虚构贸易、资金链紧张等系统性问题。',

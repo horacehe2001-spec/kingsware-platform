@@ -122,9 +122,9 @@ export function PrintReport({ customer, report }: PrintReportProps) {
 function LeToc() {
   return (
     <>
-      <p className="print-toc-h">第一部分　报告摘要与授信意见</p>
-      <p className="print-toc-i">1.1  五维综合评分摘要</p>
-      <p className="print-toc-i">1.2  信用等级与授信建议</p>
+      <p className="print-toc-h">第一部分　报告摘要与授信参考</p>
+      <p className="print-toc-i">1.1  企业综合分析摘要</p>
+      <p className="print-toc-i">1.2  综合分析档位与授信参考</p>
       <p className="print-toc-i">1.3  一票否决项检查</p>
       <p className="print-toc-i">1.4  核心风险点提示</p>
       <p className="print-toc-i">1.5  授信结构性建议</p>
@@ -148,8 +148,8 @@ function LeToc() {
       <p className="print-toc-h" style={{ marginTop: 8 }}>第六部分　履约能力与征信（LE-A05）</p>
       <p className="print-toc-i">6.1 历史融资记录　6.2 多头借贷分析　6.3 招投标与履约　6.4 资产抵质押</p>
 
-      <p className="print-toc-h" style={{ marginTop: 8 }}>第七部分　五维信用评分明细（LE-A06/A07）</p>
-      <p className="print-toc-i">7.1-7.5 五维评分明细　7.6 五对交叉验证</p>
+      <p className="print-toc-h" style={{ marginTop: 8 }}>第七部分　企业综合分析明细（LE-A06/A07）</p>
+      <p className="print-toc-i">7.1-7.5 企业综合分析明细　7.6 五对交叉验证</p>
 
       <p className="print-toc-h" style={{ marginTop: 8 }}>第八部分　授信用途与还款来源（LE-A09）</p>
       <p className="print-toc-i">8.1 授信用途　8.2 第一还款来源　8.3 第二还款来源　8.4 压力测试</p>
@@ -162,7 +162,7 @@ function LeToc() {
 
       <p className="print-toc-h" style={{ marginTop: 10 }}>附录</p>
       <p className="print-toc-i">A. 数据接口清单与字段说明</p>
-      <p className="print-toc-i">B. 评分算法详解</p>
+      <p className="print-toc-i">B. 分析方法详解</p>
       <p className="print-toc-i">C. 原始数据快照（脱敏）</p>
       <p className="print-toc-i">D. 数据合规授权链条</p>
       <p className="print-toc-i">E. 行业参考资料</p>

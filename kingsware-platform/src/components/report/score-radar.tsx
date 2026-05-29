@@ -12,6 +12,7 @@ import {
 import { ClientOnly } from '@/components/shared/client-only';
 import { Card } from '@/components/ui/card';
 import { ScoreBadge } from '@/components/shared/score-badge';
+import { scoreToLabel } from '@/data/analysis-labels';
 import type { CreditGrade } from '@/data/types';
 
 interface ScoreRadarProps {
@@ -20,6 +21,10 @@ interface ScoreRadarProps {
   totalScore?: number;
   grade?: CreditGrade;
   data: { dimension: string; score: number; weight: number }[];
+  /** 'analysis' = 纯分析版：用定性档位代替分数/等级 */
+  mode?: 'score' | 'analysis';
+  /** 纯分析版下右上角展示的综合档位（如 较好） */
+  overallLabel?: string;
 }
 
 export function ScoreRadar({
@@ -28,7 +33,10 @@ export function ScoreRadar({
   totalScore,
   grade,
   data,
+  mode = 'score',
+  overallLabel,
 }: ScoreRadarProps) {
+  const isAnalysis = mode === 'analysis';
   const chartData = data.map((d) => ({
     dimension: d.dimension,
     fullMark: 100,
@@ -44,16 +52,24 @@ export function ScoreRadar({
             <p className="mt-0.5 text-[11px] text-muted-foreground">{subtitle}</p>
           )}
         </div>
-        {grade && (
-          <div className="text-right">
-            <ScoreBadge grade={grade} size="lg" />
-            {totalScore !== undefined && (
-              <p className="mt-1 font-mono text-[11px] tabular-nums text-muted-foreground">
-                综合 {totalScore} / 100
-              </p>
+        {isAnalysis
+          ? overallLabel && (
+              <div className="text-right">
+                <span className="inline-flex items-center rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+                  综合 {overallLabel}
+                </span>
+              </div>
+            )
+          : grade && (
+              <div className="text-right">
+                <ScoreBadge grade={grade} size="lg" />
+                {totalScore !== undefined && (
+                  <p className="mt-1 font-mono text-[11px] tabular-nums text-muted-foreground">
+                    综合 {totalScore} / 100
+                  </p>
+                )}
+              </div>
             )}
-          </div>
-        )}
       </div>
 
       <div className="mt-2 h-[240px] w-full">
@@ -76,7 +92,7 @@ export function ScoreRadar({
                 axisLine={false}
               />
               <Radar
-                name="得分"
+                name={isAnalysis ? '维度表现' : '得分'}
                 dataKey="score"
                 stroke="oklch(0.55 0.21 263)"
                 fill="oklch(0.55 0.21 263)"
@@ -105,8 +121,8 @@ export function ScoreRadar({
                   style={{ width: `${d.score}%` }}
                 />
               </span>
-              <span className="w-7 text-right font-mono font-semibold tabular-nums">
-                {d.score}
+              <span className="w-9 text-right font-semibold tabular-nums">
+                {isAnalysis ? scoreToLabel(d.score) : d.score}
               </span>
             </span>
           </li>

@@ -299,9 +299,9 @@ function buildToc(isLE: boolean): DocxChild[] {
     });
 
   if (isLE) {
-    out.push(tocH('第一部分　报告摘要与授信意见'));
-    out.push(tocI('1.1 五维综合评分摘要'));
-    out.push(tocI('1.2 信用等级与授信建议'));
+    out.push(tocH('第一部分　报告摘要与授信参考'));
+    out.push(tocI('1.1 企业综合分析摘要'));
+    out.push(tocI('1.2 综合分析档位与授信参考'));
     out.push(tocI('1.3 一票否决项检查'));
     out.push(tocI('1.4 核心风险点提示'));
     out.push(tocI('1.5 授信结构性建议'));
@@ -325,8 +325,8 @@ function buildToc(isLE: boolean): DocxChild[] {
     out.push(tocH('第六部分　履约能力与征信（LE-A05）'));
     out.push(tocI('6.1 历史融资记录　6.2 多头借贷分析　6.3 招投标与履约　6.4 资产抵质押'));
 
-    out.push(tocH('第七部分　五维信用评分明细（LE-A06/A07）'));
-    out.push(tocI('7.1-7.5 五维评分明细　7.6 五对交叉验证'));
+    out.push(tocH('第七部分　企业综合分析明细（LE-A06/A07）'));
+    out.push(tocI('7.1-7.5 企业综合分析明细　7.6 五对交叉验证'));
 
     out.push(tocH('第八部分　授信用途与还款来源（LE-A09）'));
     out.push(tocI('8.1 授信用途　8.2 第一还款来源　8.3 第二还款来源　8.4 压力测试'));
@@ -338,7 +338,7 @@ function buildToc(isLE: boolean): DocxChild[] {
     out.push(tocI('10.1 事件驱动监控　10.2 定期复核　10.3 预警分级　10.4 授权管理'));
 
     out.push(tocH('附录'));
-    out.push(tocI('A 数据接口清单 ・ B 评分算法 ・ C 数据快照 ・ D 授权链条 ・ E 行业参考 ・ F 模型版本 ・ G 术语表'));
+    out.push(tocI('A 数据接口清单 ・ B 分析方法 ・ C 数据快照 ・ D 授权链条 ・ E 行业参考 ・ F 模型版本 ・ G 术语表'));
   } else {
     out.push(tocH('第一部分　报告摘要与授信意见'));
     out.push(tocI('1.1 四维综合评分摘要　1.2 信用等级与授信建议　1.3 一票否决检查　1.4 核心风险点'));

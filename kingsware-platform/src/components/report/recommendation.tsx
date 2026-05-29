@@ -13,8 +13,11 @@ import { cn } from '@/lib/utils';
 
 export function RecommendationCard({
   recommendation,
+  analysisMode = false,
 }: {
   recommendation: DueDiligenceReport['recommendation'];
+  /** true = 纯分析版：去掉"建议批准/否决"决策措辞，改"供审批参考" */
+  analysisMode?: boolean;
 }) {
   const [approving, setApproving] = useState(false);
   const [rejecting, setRejecting] = useState(false);
@@ -33,26 +36,28 @@ export function RecommendationCard({
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-2 text-sm font-semibold tracking-tight">
             <FileSignature className="size-4 text-primary" />
-            授信结构建议
+            {analysisMode ? '授信参考' : '授信结构建议'}
           </h2>
           <span
             className={cn(
               'rounded-md border px-2 py-1 text-[12px] font-semibold',
-              decisionColor,
+              analysisMode
+                ? 'border-primary/20 bg-primary/10 text-primary'
+                : decisionColor,
             )}
           >
-            {recommendation.decision}
+            {analysisMode ? '供审批参考' : recommendation.decision}
           </span>
         </div>
         <p className="mt-0.5 text-[11px] text-muted-foreground">
-          由 LE-A10 授信结论 Agent 输出 · 待审批官签批
+          由 LE-A10 授信结论 Agent 输出 · {analysisMode ? '是否授信由银行审批人员独立判定' : '待审批官签批'}
         </p>
       </header>
 
       <div className="grid grid-cols-2 gap-px bg-border/30 sm:grid-cols-4">
-        <Field label="建议金额" value={formatAmount(recommendation.amount)} highlight />
-        <Field label="建议期限" value={`${recommendation.term} 个月`} />
-        <Field label="建议利率" value={recommendation.rate} />
+        <Field label={analysisMode ? '测算参考额度' : '建议金额'} value={formatAmount(recommendation.amount)} highlight />
+        <Field label={analysisMode ? '参考期限' : '建议期限'} value={`${recommendation.term} 个月`} />
+        <Field label={analysisMode ? '参考利率' : '建议利率'} value={recommendation.rate} />
         <Field label="担保方式" value={recommendation.guarantee} />
       </div>
 

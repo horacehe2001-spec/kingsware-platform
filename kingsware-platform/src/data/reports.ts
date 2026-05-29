@@ -25,14 +25,14 @@ const LE_OUTPUT_PREVIEWS: Record<string, string> = {
     '近 36 月销项发票合计 2.18 亿元，前 5 大客户占比 38.4%（行业基准 45%）；资产负债率 48.6%，毛利率 22.4%……',
   'LE-A05': '近 36 月融资 6 笔 · 中标 23 项履约良好 · 长期多头正常 · 动产抵押 1 项',
   'LE-A06':
-    '五维加权 78 分（B 级良）· 经营 82 / 财务 75 / 履约 80 / 合规 88 / 成长 65',
+    '综合表现良好 · 经营较好 / 财务较好 / 履约较好 / 合规强 / 成长一般',
   'LE-A07':
     '5 对验证 · 2 对关注（发票×营收 24%、反欺诈×发票闭环 18%）· 综合财务真实性可控',
   'LE-A08':
     '4 类风险地图 · 1 红区（应收账款）/ 2 黄区（关联交易、用电波动）/ 1 蓝区（环保处罚）',
   'LE-A09': '保障倍数 1.8x · 第二还款来源不动产抵押估值 1,200 万 · 4 档压力测试可承受',
   'LE-A10':
-    '建议批准 800 万流贷 · LPR+75BP · 12 月 · 不动产抵押+实控人连带；核心风险 4 项已排序',
+    '测算可覆盖 800 万流贷（供审批参考）· LPR+75BP · 12 月 · 不动产抵押+实控人连带；核心风险 4 项已排序',
   'LE-A11':
     '配置 32 项监控维度 · 红灯：失信/用电连续 3 月归零；黄灯：关联交易月增/多头月增>3 家',
   'LE-A12':
@@ -156,8 +156,8 @@ const LE_CROSS_VALIDATIONS: CrossValidationPair[] = [
 // 法人 10 章 + 7 附录 + 93 张表，章节主责按 法人小微Agent对应矩阵_最终版.docx 映射
 const LE_SECTIONS: ReportSection[] = [
   // 第一部分（LE-A10 主责摘要 + 核心风险 + 结构性建议）
-  { number: '1.1', title: '五维综合评分摘要', contentPreview: '综合评分 78（B 级良）', agentGenerated: true, agentId: 'LE-A06' },
-  { number: '1.2', title: '信用等级与授信建议', contentPreview: '建议批准 800 万流贷', agentGenerated: true, agentId: 'LE-A10' },
+  { number: '1.1', title: '企业综合分析摘要', contentPreview: '综合表现良好（经营/财务/履约较好）', agentGenerated: true, agentId: 'LE-A06' },
+  { number: '1.2', title: '综合分析档位与授信参考', contentPreview: '测算可覆盖 800 万 · 供审批参考', agentGenerated: true, agentId: 'LE-A10' },
   { number: '1.3', title: '一票否决项检查', contentPreview: '10 项全部通过', agentGenerated: true, agentId: 'SE-01' },
   { number: '1.4', title: '核心风险点提示', contentPreview: '识别 4 项核心风险', agentGenerated: true, agentId: 'LE-A10' },
   { number: '1.5', title: '授信结构性建议', contentPreview: '组合担保 + 季报报送', agentGenerated: true, agentId: 'LE-A10' },
@@ -194,7 +194,7 @@ const LE_SECTIONS: ReportSection[] = [
   { number: '5.4', title: '现金流分析', contentPreview: '经营现金流为正，覆盖倍数 1.8', agentGenerated: true, agentId: 'LE-A04' },
   { number: '5.5', title: '营运能力分析', contentPreview: '应收周转 142 天（关注）', agentGenerated: true, agentId: 'LE-A04' },
   { number: '5.6', title: '发票流水深度分析', contentPreview: '近 36 月销项 2.18 亿', agentGenerated: true, agentId: 'LE-A04' },
-  { number: '5.7', title: '纳税申报', contentPreview: '纳税信用 B 级', agentGenerated: true, agentId: 'LE-A04' },
+  { number: '5.7', title: '纳税申报', contentPreview: '纳税信用较好', agentGenerated: true, agentId: 'LE-A04' },
   { number: '5.9', title: '财务异动与解释', contentPreview: '识别 3 项异动', agentGenerated: true, agentId: 'LE-A04' },
 
   // 第六部分（LE-A05 主责）
@@ -204,11 +204,11 @@ const LE_SECTIONS: ReportSection[] = [
   { number: '6.4', title: '资产抵质押', contentPreview: '动产抵押 1 项', agentGenerated: true, agentId: 'LE-A05' },
 
   // 第七部分（LE-A06 评分 + LE-A07 交叉验证）
-  { number: '7.1', title: '维度一 经营稳定性 30%', contentPreview: '82 分', agentGenerated: true, agentId: 'LE-A06' },
-  { number: '7.2', title: '维度二 财务健康度 25%', contentPreview: '75 分', agentGenerated: true, agentId: 'LE-A06' },
-  { number: '7.3', title: '维度三 履约能力 25%', contentPreview: '80 分', agentGenerated: true, agentId: 'LE-A06' },
-  { number: '7.4', title: '维度四 合规性 15%', contentPreview: '88 分', agentGenerated: true, agentId: 'LE-A06' },
-  { number: '7.5', title: '维度五 成长性 5%', contentPreview: '65 分', agentGenerated: true, agentId: 'LE-A06' },
+  { number: '7.1', title: '维度一 经营稳定性 30%', contentPreview: '较好', agentGenerated: true, agentId: 'LE-A06' },
+  { number: '7.2', title: '维度二 财务健康度 25%', contentPreview: '较好', agentGenerated: true, agentId: 'LE-A06' },
+  { number: '7.3', title: '维度三 履约能力 25%', contentPreview: '较好', agentGenerated: true, agentId: 'LE-A06' },
+  { number: '7.4', title: '维度四 合规性 15%', contentPreview: '强', agentGenerated: true, agentId: 'LE-A06' },
+  { number: '7.5', title: '维度五 成长性 5%', contentPreview: '一般', agentGenerated: true, agentId: 'LE-A06' },
   { number: '7.6', title: '五对交叉验证', contentPreview: '5 对验证 / 2 对关注', agentGenerated: true, agentId: 'LE-A07' },
   { number: '7.6.1', title: '交叉验证综合结论', contentPreview: '财务真实性可控', agentGenerated: true, agentId: 'LE-A07' },
 
@@ -261,7 +261,7 @@ export const LE_SAMPLE_REPORT: DueDiligenceReport = {
     rate: 'LPR + 75 BP',
     guarantee: '不动产抵押 + 实控人连带责任保证',
     conditions: [
-      '保持纳税信用 B 级以上',
+      '保持纳税信用良好',
       '财务季报报送',
       '前 5 大客户回款情况按月披露',
       '关联交易超过单笔 50 万事先知会',
