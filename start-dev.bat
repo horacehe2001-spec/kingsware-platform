@@ -64,13 +64,9 @@ endlocal
 goto :eof
 
 REM -- Helper: kill any process listening on the given TCP port
+REM    Uses Get-NetTCPConnection (reliable on Win10/11) instead of parsing
+REM    netstat output, which is locale-/format-fragile and can miss the PID.
 :kill_port
 set "PORT=%~1"
-set "FOUND="
-for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":%PORT% " ^| findstr "LISTENING"') do (
-    set "FOUND=1"
-    echo   - killing PID %%a on port %PORT%
-    taskkill /F /PID %%a >nul 2>&1
-)
-if not defined FOUND echo   - port %PORT% is free
+powershell -NoProfile -Command "$c = Get-NetTCPConnection -LocalPort %PORT% -State Listen -ErrorAction SilentlyContinue; if ($c) { $c.OwningProcess | Sort-Object -Unique | ForEach-Object { Write-Host ('   - killing PID ' + $_ + ' on port %PORT%'); Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue } } else { Write-Host '   - port %PORT% is free' }"
 goto :eof
