@@ -23,6 +23,7 @@ import { promises as fs } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import { gradeToLabel, overallVerdict, scoreToLabel } from '../src/data/analysis-labels';
 import { AGENT_PROMPTS, type AgentBlockPromptDef } from '../src/lib/agent-prompts';
 import { ALL_CUSTOMERS as customers } from '../src/data/customers';
 import { getLeProfile, getSpProfile } from '../src/data/customer-profiles';
@@ -157,7 +158,7 @@ function factSheetFor(c: typeof customers[number]): string {
         : `· 主营：${c.industry}`,
       incomeY && incomeNet ? `· 财务：${incomeY.y} 营收 ${incomeY.y}（${incomeY.growth ?? '—'}）/ 净利 ${incomeNet.y}` : '',
       cashFlow ? `· 现金流：经营性 ${cashFlow.y}${ar ? ` · 应收周转 ${ar.y}（${ar.evaluation}，行业 ${ar.industry ?? '—'}）` : ''}` : '',
-      `· 评分：综合 ${c.creditScore ?? '—'}（${c.creditGrade ?? '—'}）= 经营 ${s.operationStability}×30% + 财务 ${s.financialHealth}×25% + 履约 ${s.performance}×25% + 合规 ${s.compliance}×15% + 成长 ${s.growth}×5%`,
+      `· 综合表现：${overallVerdict(gradeToLabel(c.creditGrade ?? 'B'))}（经营 ${scoreToLabel(s.operationStability)} / 财务 ${scoreToLabel(s.financialHealth)} / 履约 ${scoreToLabel(s.performance)} / 合规 ${scoreToLabel(s.compliance)} / 成长 ${scoreToLabel(s.growth)}）`,
       p.relatedEnterprises.length > 0
         ? `· 关联：${p.relatedEnterprises.map((r) => `${r.name}（${r.tag}）`).join(' / ')}（共 ${p.totalRelatedCount} 家）`
         : '',
@@ -259,6 +260,13 @@ function buildUserPrompt(prompt: AgentBlockPromptDef, customer: CustomerLite): s
     ``,
     `# 客户事实清单（必须严格基于此撰写，不可编造）`,
     customer.factSheet,
+    ...(prompt.customerType === 'legal-entity'
+      ? [
+          ``,
+          `# 纯分析版要求`,
+          `不要输出数值评分、加权分或信用等级（A/B/C/D 级）；维度表现一律用 强/较好/一般/偏弱 定性表述，综合结论用"综合表现良好/一般"等定性措辞。`,
+        ]
+      : []),
     ``,
     `# 输出`,
     `直接输出 JSON 对象 {"paragraphs": [...]}，不要任何前缀、后缀、解释、代码栅栏。`,
